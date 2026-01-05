@@ -5,162 +5,57 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Uhrzeit – Selbsttest (1. Klasse)</title>
   <style>
-    :root {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #f3f4f6;
-    }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 14px;
-      box-sizing: border-box;
-    }
-    .app {
-      background: #ffffff;
-      border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-      padding: 2rem 2.5rem;
-      max-width: 560px;
-      width: 100%;
-      box-sizing: border-box;
-    }
-    h1 { margin-top: 0; text-align: center; font-size: 1.6rem; }
-    .subtitle {
-      text-align: center;
-      color: #4b5563;
-      margin-bottom: 1.2rem;
-      font-size: 0.95rem;
-    }
-    .center { text-align: center; }
+    :root { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background:#f3f4f6; }
+    body { margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:14px; box-sizing:border-box; }
+    .app { background:#fff; border-radius:16px; box-shadow:0 10px 30px rgba(0,0,0,0.1); padding:2rem 2.5rem; max-width:560px; width:100%; box-sizing:border-box; }
+    h1 { margin-top:0; text-align:center; font-size:1.6rem; }
+    .subtitle { text-align:center; color:#4b5563; margin-bottom:1.2rem; font-size:0.95rem; }
+    .center { text-align:center; }
 
-    .choice-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0.6rem;
-      margin: 1rem 0 0.5rem;
-    }
+    .choice-grid { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:0.6rem; margin:1rem 0 0.5rem; }
     .choice-btn {
-      padding: 0.9rem 0.6rem;
-      border-radius: 16px;
-      border: 2px solid #d1d5db;
-      background: #f9fafb;
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
+      padding:0.9rem 0.6rem; border-radius:16px; border:2px solid #d1d5db; background:#f9fafb;
+      font-size:1rem; font-weight:700; cursor:pointer;
       transition: background 0.15s ease, transform 0.05s ease, border-color 0.15s ease, box-shadow 0.15s ease;
     }
     .choice-btn.selected {
-      background: #2563eb;
-      color: #ffffff;
-      border-color: #1d4ed8;
-      box-shadow: 0 5px 15px rgba(37,99,235,0.35);
+      background:#2563eb; color:#fff; border-color:#1d4ed8; box-shadow:0 5px 15px rgba(37,99,235,0.35);
     }
     .choice-btn:active { transform: translateY(1px); }
 
-    .selected-info {
-      font-size: 0.85rem;
-      color: #6b7280;
-      text-align: center;
-      min-height: 1.2rem;
-      margin-bottom: 0.5rem;
-    }
+    .selected-info { font-size:0.85rem; color:#6b7280; text-align:center; min-height:1.2rem; margin-bottom:0.5rem; }
 
-    .equation {
-      font-size: 1.15rem;
-      font-weight: 650;
-      margin: 0.5rem 0;
-      text-align: center;
-    }
-    .progress {
-      font-size: 0.9rem;
-      color: #6b7280;
-      margin-bottom: 0.5rem;
-      text-align: center;
-    }
+    .equation { font-size:1.15rem; font-weight:650; margin:0.5rem 0; text-align:center; }
+    .progress { font-size:0.9rem; color:#6b7280; margin-bottom:0.5rem; text-align:center; }
 
     .primary-btn {
-      margin-top: 0.9rem;
-      width: 100%;
-      padding: 0.7rem 1rem;
-      font-size: 1.1rem;
-      border-radius: 999px;
-      border: none;
-      cursor: pointer;
-      background: #2563eb;
-      color: white;
-      font-weight: 700;
+      margin-top:0.9rem; width:100%; padding:0.7rem 1rem; font-size:1.1rem;
+      border-radius:999px; border:none; cursor:pointer; background:#2563eb; color:white; font-weight:700;
     }
-    .primary-btn:disabled { background: #9ca3af; cursor: not-allowed; }
+    .primary-btn:disabled { background:#9ca3af; cursor:not-allowed; }
 
     .secondary-btn {
-      margin-top: 0.4rem;
-      width: 100%;
-      padding: 0.6rem 1rem;
-      font-size: 1rem;
-      border-radius: 999px;
-      border: 1px solid #d1d5db;
-      cursor: pointer;
-      background: #f9fafb;
-      color: #111827;
-      font-weight: 600;
+      margin-top:0.4rem; width:100%; padding:0.6rem 1rem; font-size:1rem;
+      border-radius:999px; border:1px solid #d1d5db; cursor:pointer; background:#f9fafb; color:#111827; font-weight:600;
     }
 
-    .feedback {
-      min-height: 1.4rem;
-      margin-top: 0.4rem;
-      font-weight: 650;
-      text-align: center;
-    }
-    .feedback.ok { color: #15803d; }
-    .feedback.error { color: #b91c1c; }
-    .hidden { display: none; }
+    .feedback { min-height:1.4rem; margin-top:0.4rem; font-weight:650; text-align:center; }
+    .feedback.ok { color:#15803d; }
+    .feedback.error { color:#b91c1c; }
+    .hidden { display:none; }
 
-    .stats {
-      margin-top: 1rem;
-      font-size: 0.95rem;
-      color: #374151;
-    }
-    .tag {
-      display: inline-block;
-      border-radius: 999px;
-      padding: 0.1rem 0.6rem;
-      font-size: 0.8rem;
-      background: #eff6ff;
-      color: #1d4ed8;
-      margin-top: 0.3rem;
-      font-weight: 650;
-    }
+    .stats { margin-top:1rem; font-size:0.95rem; color:#374151; }
+    .tag { display:inline-block; border-radius:999px; padding:0.1rem 0.6rem; font-size:0.8rem; background:#eff6ff; color:#1d4ed8; margin-top:0.3rem; font-weight:650; }
 
-    .options-grid {
-      margin-top: 0.8rem;
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0.6rem;
-    }
+    .options-grid { margin-top:0.8rem; display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:0.6rem; }
     .option-btn {
-      padding: 0.9rem 0.5rem;
-      border-radius: 16px;
-      border: 2px solid #d1d5db;
-      background: #f9fafb;
-      font-size: 1.25rem;
-      font-weight: 800;
-      cursor: pointer;
+      padding:0.9rem 0.5rem; border-radius:16px; border:2px solid #d1d5db; background:#f9fafb;
+      font-size:1.25rem; font-weight:800; cursor:pointer;
     }
-    .option-btn:hover { background: #e5e7eb; }
+    .option-btn:hover { background:#e5e7eb; }
 
-    .clock-wrapper {
-      display: flex;
-      justify-content: center;
-      margin-top: 0.5rem;
-    }
-    #clock-canvas {
-      background: #f9fafb;
-      border-radius: 50%;
-      box-shadow: inset 0 0 5px rgba(0,0,0,0.08);
-    }
+    .clock-wrapper { display:flex; justify-content:center; margin-top:0.5rem; }
+    #clock-canvas { background:#f9fafb; border-radius:50%; box-shadow: inset 0 0 5px rgba(0,0,0,0.08); }
   </style>
 </head>
 <body>
@@ -200,7 +95,7 @@
 
     <div class="feedback" id="feedback"></div>
     <div class="stats">
-      Richtig: <span id="stat-correct">0</span> / <span id="stat-total">30</span><br>
+      Richtig: <span id="stat-correct">0</span> / <span id="stat-total">20</span><br>
       Falsche Versuche: <span id="stat-wrong">0</span><br>
       Modus: <span id="stat-mode"></span>
     </div>
@@ -221,20 +116,40 @@
 </div>
 
 <script>
-  const TOTAL_QUESTIONS = 30;
-
+  // ========= Settings =========
+  const TOTAL_QUESTIONS = 20; // <- nach 20 Aufgaben fertig
   const DIFF_LABELS = { easy: 'einfach', hard: 'schwierig' };
 
-  let selectedDifficulty = null;
+  // ========= Audio (aus Ordner /audio) =========
+  const sfx = {
+    correct: new Audio('audio/correct.wav'),
+    error: new Audio('audio/error.wav'),
+    gamewon: new Audio('audio/gamewon.wav')
+  };
+  // optional: etwas "snappier"
+  sfx.correct.preload = 'auto';
+  sfx.error.preload = 'auto';
+  sfx.gamewon.preload = 'auto';
 
+  function playSfx(audioObj) {
+    if (!audioObj) return;
+    try {
+      audioObj.pause();
+      audioObj.currentTime = 0;
+      const p = audioObj.play();
+      if (p && typeof p.catch === 'function') p.catch(() => {});
+    } catch (e) {}
+  }
+
+  // ========= State =========
+  let selectedDifficulty = null;
   let questionsDone = 0;
   let correctAnswers = 0;
   let wrongAnswers = 0;
   let usedQuestions = [];
-
   let currentQuestion = null;
 
-  // DOM
+  // ========= DOM =========
   const startScreen = document.getElementById('start-screen');
   const quizScreen = document.getElementById('quiz-screen');
   const resultScreen = document.getElementById('result-screen');
@@ -260,7 +175,7 @@
   const clockCanvas = document.getElementById('clock-canvas');
   const clockCtx = clockCanvas.getContext('2d');
 
-  // Auswahl
+  // ========= Auswahl =========
   difficultyGrid.querySelectorAll('.difficulty-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const diff = btn.getAttribute('data-diff');
@@ -302,6 +217,7 @@
     }
   });
 
+  // ========= Game =========
   function startTraining() {
     if (!selectedDifficulty) return;
 
@@ -333,7 +249,6 @@
 
     let q;
     let tries = 0;
-
     while (true) {
       q = generateTimeQuestion(selectedDifficulty);
       const key = `${q.hour}-${q.minute}-${selectedDifficulty}`;
@@ -372,7 +287,9 @@
   function handleAnswer(selectedStr) {
     if (!currentQuestion) return;
 
-    if (selectedStr === currentQuestion.correctString) {
+    const isCorrect = (selectedStr === currentQuestion.correctString);
+
+    if (isCorrect) {
       correctAnswers++;
       statCorrect.textContent = correctAnswers.toString();
       feedback.textContent = 'Richtig! 👍';
@@ -384,7 +301,18 @@
       feedback.className = 'feedback error';
     }
 
+    // Audio (WICHTIG: auf Klick ausgelöst, deshalb i.d.R. erlaubt)
+    const willFinishNow = (questionsDone + 1 >= TOTAL_QUESTIONS);
+    if (isCorrect && willFinishNow) {
+      playSfx(sfx.gamewon);
+    } else if (isCorrect) {
+      playSfx(sfx.correct);
+    } else {
+      playSfx(sfx.error);
+    }
+
     questionsDone++;
+
     if (questionsDone >= TOTAL_QUESTIONS) {
       setTimeout(endTraining, 700);
     } else {
@@ -405,7 +333,7 @@
       `Du hattest insgesamt <strong>${wrongAnswers}</strong> falsche Versuche.`;
   }
 
-  // --- Generator (1. Klasse) ---
+  // ========= Zeit-Generator =========
   function generateTimeQuestion(difficulty) {
     let hour = randomInt(1, 12);
     let minute;
@@ -456,37 +384,25 @@
     return { h: hour, m: minute };
   }
 
-  // --- Anzeige (neu) ---
+  // Anzeige:
   // :00 => "3 Uhr"
-  // :30 => "halb 4" (also nächste Stunde!)
+  // :30 => "halb 11" (also nächste Stunde!)
   // :15 => "viertel nach 3"
-  // :45 => "viertel vor 4" (auch nächste Stunde)
+  // :45 => "viertel vor 4"
   function timeToDisplayString(t) {
     const h = t.h;
     const m = t.m;
 
     if (m === 0) return `${h} Uhr`;
+    if (m === 30) return `halb ${(h % 12) + 1}`;
+    if (m === 15) return `viertel nach ${h}`;
+    if (m === 45) return `viertel vor ${(h % 12) + 1}`;
 
-    if (m === 30) {
-      const nextH = (h % 12) + 1;
-      return `halb ${nextH}`;
-    }
-
-    if (m === 15) {
-      return `viertel nach ${h}`;
-    }
-
-    if (m === 45) {
-      const nextH = (h % 12) + 1;
-      return `viertel vor ${nextH}`;
-    }
-
-    // sollte nicht vorkommen:
-    return `${h}:${String(m).padStart(2,'0')} Uhr`;
+    return `${h}:${String(m).padStart(2,'0')} Uhr`; // Fallback
   }
 
-  // --- Uhr zeichnen (dicker + Farben) ---
-  // Stunde rot, Minute blau
+  // ========= Uhr zeichnen =========
+  // Stunde rot, Minute blau, dicker
   function drawClock(hour, minute) {
     const ctx = clockCtx;
     const w = clockCanvas.width;
@@ -521,28 +437,28 @@
       ctx.stroke();
     }
 
-    // Minutenzeiger (blau, dicker)
+    // Minutenzeiger (blau)
     const minuteAngle = (Math.PI / 30) * minute - Math.PI / 2;
     ctx.beginPath();
     ctx.moveTo(0, 0);
     ctx.lineTo((radius - 22) * Math.cos(minuteAngle), (radius - 22) * Math.sin(minuteAngle));
-    ctx.lineWidth = 6;              // dicker
+    ctx.lineWidth = 6;
     ctx.lineCap = 'round';
-    ctx.strokeStyle = '#2563eb';    // blau
+    ctx.strokeStyle = '#2563eb';
     ctx.stroke();
 
-    // Stundenzeiger (rot, dicker)
+    // Stundenzeiger (rot)
     const hourIn12 = hour % 12;
     const hourAngle = (Math.PI / 6) * (hourIn12 + minute / 60) - Math.PI / 2;
     ctx.beginPath();
     ctx.moveTo(0, 0);
     ctx.lineTo((radius - 55) * Math.cos(hourAngle), (radius - 55) * Math.sin(hourAngle));
-    ctx.lineWidth = 7;              // dicker
+    ctx.lineWidth = 7;
     ctx.lineCap = 'round';
-    ctx.strokeStyle = '#dc2626';    // rot
+    ctx.strokeStyle = '#dc2626';
     ctx.stroke();
 
-    // Mittelpunkt oben drauf
+    // Mittelpunkt
     ctx.beginPath();
     ctx.arc(0, 0, 6, 0, Math.PI * 2);
     ctx.fillStyle = '#111827';
@@ -555,6 +471,7 @@
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
+  // Init
   (function init() {
     statTotal.textContent = TOTAL_QUESTIONS.toString();
     updateStartControls();
