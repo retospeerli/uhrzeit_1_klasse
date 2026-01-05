@@ -27,11 +27,7 @@
       width: 100%;
       box-sizing: border-box;
     }
-    h1 {
-      margin-top: 0;
-      text-align: center;
-      font-size: 1.6rem;
-    }
+    h1 { margin-top: 0; text-align: center; font-size: 1.6rem; }
     .subtitle {
       text-align: center;
       color: #4b5563;
@@ -96,18 +92,9 @@
       background: #2563eb;
       color: white;
       font-weight: 700;
-      transition: transform 0.05s ease, box-shadow 0.05s ease, background 0.2s ease;
     }
-    .primary-btn:hover { background: #1d4ed8; }
-    .primary-btn:active {
-      transform: translateY(1px);
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-    }
-    .primary-btn:disabled {
-      background: #9ca3af;
-      cursor: not-allowed;
-      box-shadow: none;
-    }
+    .primary-btn:disabled { background: #9ca3af; cursor: not-allowed; }
+
     .secondary-btn {
       margin-top: 0.4rem;
       width: 100%;
@@ -119,15 +106,6 @@
       background: #f9fafb;
       color: #111827;
       font-weight: 600;
-      transition: transform 0.05s ease, box-shadow 0.05s ease, background 0.2s ease, border-color 0.2s ease;
-    }
-    .secondary-btn:hover {
-      background: #e5e7eb;
-      border-color: #9ca3af;
-    }
-    .secondary-btn:active {
-      transform: translateY(1px);
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     }
 
     .feedback {
@@ -170,13 +148,8 @@
       font-size: 1.25rem;
       font-weight: 800;
       cursor: pointer;
-      transition: background 0.15s ease, transform 0.05s ease, border-color 0.15s ease, box-shadow 0.15s ease;
     }
     .option-btn:hover { background: #e5e7eb; }
-    .option-btn:active {
-      transform: translateY(1px);
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-    }
 
     .clock-wrapper {
       display: flex;
@@ -250,19 +223,16 @@
 <script>
   const TOTAL_QUESTIONS = 30;
 
-  const DIFF_LABELS = {
-    easy: 'einfach',
-    hard: 'schwierig'
-  };
+  const DIFF_LABELS = { easy: 'einfach', hard: 'schwierig' };
 
-  let selectedDifficulty = null;  // 'easy' | 'hard'
+  let selectedDifficulty = null;
 
   let questionsDone = 0;
   let correctAnswers = 0;
   let wrongAnswers = 0;
-  let usedQuestions = [];         // "h-m-diff"
+  let usedQuestions = [];
 
-  let currentQuestion = null;     // {hour, minute, label, correctString, options[]}
+  let currentQuestion = null;
 
   // DOM
   const startScreen = document.getElementById('start-screen');
@@ -290,7 +260,7 @@
   const clockCanvas = document.getElementById('clock-canvas');
   const clockCtx = clockCanvas.getContext('2d');
 
-  // Schwierigkeit wählen
+  // Auswahl
   difficultyGrid.querySelectorAll('.difficulty-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const diff = btn.getAttribute('data-diff');
@@ -359,7 +329,7 @@
     feedback.textContent = '';
     feedback.className = 'feedback';
 
-    const optionsCount = 4; // 1. Klasse: immer 4 Optionen
+    const optionsCount = 4;
 
     let q;
     let tries = 0;
@@ -372,7 +342,7 @@
         break;
       }
       tries++;
-      if (tries > 300) break; // Notfall: Doppel zulassen
+      if (tries > 300) break;
     }
 
     currentQuestion = q;
@@ -384,7 +354,6 @@
     currentQuestion.options = options;
 
     renderOptions(options);
-
     progressText.textContent = `Aufgabe ${questionsDone + 1} von ${TOTAL_QUESTIONS}`;
   }
 
@@ -436,9 +405,7 @@
       `Du hattest insgesamt <strong>${wrongAnswers}</strong> falsche Versuche.`;
   }
 
-  // --- Zeit-Aufgabengenerator (1. Klasse) ---
-  // easy: volle + halbe Stunden
-  // hard: + Viertelstunden (00, 15, 30, 45)
+  // --- Generator (1. Klasse) ---
   function generateTimeQuestion(difficulty) {
     let hour = randomInt(1, 12);
     let minute;
@@ -468,7 +435,6 @@
       options.push(str);
     }
 
-    // mischen
     for (let i = options.length - 1; i > 0; i--) {
       const j = randomInt(0, i);
       [options[i], options[j]] = [options[j], options[i]];
@@ -490,20 +456,37 @@
     return { h: hour, m: minute };
   }
 
-  // --- Anzeige-String für 1. Klasse ---
-  // Vorgabe: Zahlen statt Zahlwörter, z.B. "3 Uhr"
+  // --- Anzeige (neu) ---
+  // :00 => "3 Uhr"
+  // :30 => "halb 4" (also nächste Stunde!)
+  // :15 => "viertel nach 3"
+  // :45 => "viertel vor 4" (auch nächste Stunde)
   function timeToDisplayString(t) {
     const h = t.h;
     const m = t.m;
 
     if (m === 0) return `${h} Uhr`;
-    if (m === 30) return `${h}:${m.toString().padStart(2,'0')} Uhr`; // "3:30 Uhr"
-    if (m === 15 || m === 45) return `${h}:${m.toString().padStart(2,'0')} Uhr`;
-    // Fallback (sollte nicht vorkommen):
-    return `${h}:${m.toString().padStart(2,'0')} Uhr`;
+
+    if (m === 30) {
+      const nextH = (h % 12) + 1;
+      return `halb ${nextH}`;
+    }
+
+    if (m === 15) {
+      return `viertel nach ${h}`;
+    }
+
+    if (m === 45) {
+      const nextH = (h % 12) + 1;
+      return `viertel vor ${nextH}`;
+    }
+
+    // sollte nicht vorkommen:
+    return `${h}:${String(m).padStart(2,'0')} Uhr`;
   }
 
-  // --- Analoge Uhr zeichnen ---
+  // --- Uhr zeichnen (dicker + Farben) ---
+  // Stunde rot, Minute blau
   function drawClock(hour, minute) {
     const ctx = clockCtx;
     const w = clockCanvas.width;
@@ -513,7 +496,6 @@
     const cy = h / 2;
 
     ctx.clearRect(0, 0, w, h);
-
     ctx.save();
     ctx.translate(cx, cy);
 
@@ -534,45 +516,45 @@
       ctx.beginPath();
       ctx.moveTo(inner * Math.cos(angle), inner * Math.sin(angle));
       ctx.lineTo(outer * Math.cos(angle), outer * Math.sin(angle));
-      ctx.lineWidth = (i % 3 === 0) ? 3 : 1.5;
+      ctx.lineWidth = (i % 3 === 0) ? 3.2 : 1.8;
       ctx.strokeStyle = '#111827';
       ctx.stroke();
     }
 
-    // Mittelpunkt
-    ctx.beginPath();
-    ctx.arc(0, 0, 4, 0, Math.PI * 2);
-    ctx.fillStyle = '#111827';
-    ctx.fill();
-
-    // Minutenzeiger
+    // Minutenzeiger (blau, dicker)
     const minuteAngle = (Math.PI / 30) * minute - Math.PI / 2;
     ctx.beginPath();
     ctx.moveTo(0, 0);
     ctx.lineTo((radius - 22) * Math.cos(minuteAngle), (radius - 22) * Math.sin(minuteAngle));
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = '#1f2937';
+    ctx.lineWidth = 6;              // dicker
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = '#2563eb';    // blau
     ctx.stroke();
 
-    // Stundenzeiger
+    // Stundenzeiger (rot, dicker)
     const hourIn12 = hour % 12;
     const hourAngle = (Math.PI / 6) * (hourIn12 + minute / 60) - Math.PI / 2;
     ctx.beginPath();
     ctx.moveTo(0, 0);
-    ctx.lineTo((radius - 48) * Math.cos(hourAngle), (radius - 48) * Math.sin(hourAngle));
-    ctx.lineWidth = 4;
-    ctx.strokeStyle = '#111827';
+    ctx.lineTo((radius - 55) * Math.cos(hourAngle), (radius - 55) * Math.sin(hourAngle));
+    ctx.lineWidth = 7;              // dicker
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = '#dc2626';    // rot
     ctx.stroke();
+
+    // Mittelpunkt oben drauf
+    ctx.beginPath();
+    ctx.arc(0, 0, 6, 0, Math.PI * 2);
+    ctx.fillStyle = '#111827';
+    ctx.fill();
 
     ctx.restore();
   }
 
-  // --- Hilfsfunktionen ---
   function randomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  // Initial
   (function init() {
     statTotal.textContent = TOTAL_QUESTIONS.toString();
     updateStartControls();
